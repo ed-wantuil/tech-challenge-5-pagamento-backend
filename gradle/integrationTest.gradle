@@ -1,0 +1,61 @@
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integrationTest/java')
+        }
+        resources.srcDir file('src/integrationTest/resources')
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestImplementation.extendsFrom integrationTest
+
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+dependencies {
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    integrationTestImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    integrationTestImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.2'
+    integrationTestImplementation 'com.intuit.karate:karate-junit5:1.4.1'
+    integrationTestImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    integrationTestImplementation 'org.testcontainers:localstack'
+    integrationTestImplementation 'org.testcontainers:junit-jupiter'
+}
+
+
+task integrationTest(type: Test) {
+    systemProperty "cucumber.options", System.getProperty("cucumber.options")
+    systemProperty "karate.env", System.getProperty("karate.env")
+    systemProperty "karate.enabled", System.getProperty("karate.enabled")
+    outputs.upToDateWhen { false }
+    useJUnitPlatform()
+
+    group = 'verification'
+
+    useJUnitPlatform {
+        includeTags 'integrationTest'
+    }
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    systemProperty "env", System.getProperty("env")
+
+    check.dependsOn it
+    shouldRunAfter test
+}
+
+tasks.named('processIntegrationTestResources') {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}

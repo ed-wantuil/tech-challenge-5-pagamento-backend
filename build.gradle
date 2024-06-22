@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.1'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.flywaydb.flyway' version '9.22.3'
+    id 'jacoco'
+}
+
+group = 'br.com.fiap.techchallenge'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+apply from: "$rootDir/gradle/integrationTest.gradle"
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springdoc:springdoc-openapi-starter-common:2.1.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework:spring-jms'
+    implementation 'com.amazonaws:amazon-sqs-java-messaging-lib:2.1.1'
+    implementation 'com.amazonaws:aws-java-sdk-dynamodb:1.12.529'
+    implementation 'com.github.derjust:spring-data-dynamodb:5.1.0'
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.2.0'
+
+}
+
+test {
+    useJUnitPlatform {
+        excludeTags 'integrationTest'
+    }
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'br/com/fiap/techchallenge/domain/**',
+                    'br/com/fiap/techchallenge/frameworks/**',
+                    'br/com/fiap/techchallenge/interfaces/**',
+                    'br/com/fiap/techchallenge/Application.class'
+            ])
+        }))
+    }
+}

@@ -1,0 +1,19 @@
+server:
+  port: 8082
+
+aws:
+  sqs:
+    endpoint: https://sqs.us-east-1.amazonaws.com
+    queue:
+      pagamento:
+        name: tech_challenge_pagamento
+      pedido:
+        name: tech_challenge_pedido
+        endpoint: https://sqs.us-east-1.amazonaws.com/358266770835/tech_challenge_producao
+
+
+
+  dynamodb:
+    endpoint: https://dynamodb.us-east-1.amazonaws.com
+
+  region: us-east-1

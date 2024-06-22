@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "b25324c8-b8bc-42ae-946e-6213ae5458f6",
+		"name": "Tech Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16489786"
+	},
+	"item": [
+		{
+			"name": "customer",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cpf\": \"084.537.660-88\",\n    \"name\": \"José Silva\",\n    \"email\": \"jose@silva.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/customer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find by cpf",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/customer?cpf=758.679.480-48",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customer"
+							],
+							"query": [
+								{
+									"key": "cpf",
+									"value": "758.679.480-48"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "1.a.i -checkout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer\": {\n        \"id\": \"4d1335a5-3627-42f3-8637-4e52b6e852bf\"\n    },\n    \"items\": [\n        {\n            \"product\": \"d3c97509-3d47-46f0-852a-d04d5a3b12f3\",\n            \"quantity\": 1,\n            \"price\": 10.0\n        },\n        {\n            \"product\": \"3bfa8cc8-0a8d-43c1-9cda-94484c069cd9\",\n            \"quantity\": 1,\n            \"price\": 10.0\n        }\n    ],\n    \"deliveryStatus\": \"PREPARING\",\n    \"paymentStatus\": \"WAITING\",\n    \"created\": \"2023-10-30\",\n    \"amount\": 20.0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.a.iii -webhook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"db21f88b-bb46-456e-88e9-8bb365dd492a\",\n    \"paymentStatus\": \"PAID\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/order/update-payment-status-webhook",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"update-payment-status-webhook"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "checkout without customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"items\": [\n        {\n            \"product\": \"d3c97509-3d47-46f0-852a-d04d5a3b12f3\",\n            \"quantity\": 1,\n            \"price\": 10.0\n        },\n        {\n            \"product\": \"3bfa8cc8-0a8d-43c1-9cda-94484c069cd9\",\n            \"quantity\": 1,\n            \"price\": 10.0\n        }\n    ],\n    \"deliveryStatus\": \"RECEIVED\",\n    \"paymentStatus\": \"WAITING\",\n    \"created\": \"2023-05-08\",\n    \"amount\": 20.0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/checkout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.a.v - update delivery status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/order/update-delivery-status?id=715951ea-adc4-4d25-9c57-29d40959d06d&delivery-status=DONE",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"update-delivery-status"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "715951ea-adc4-4d25-9c57-29d40959d06d"
+								},
+								{
+									"key": "delivery-status",
+									"value": "DONE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find by status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/order/find-by-status?delivery-status=PREPARING",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"find-by-status"
+							],
+							"query": [
+								{
+									"key": "delivery-status",
+									"value": "PREPARING"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.a.ii - find by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/order/find-by-id?id=db21f88b-bb46-456e-88e9-8bb365dd492a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"find-by-id"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "db21f88b-bb46-456e-88e9-8bb365dd492a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.a.iv - list not done",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/order/not-done",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"not-done"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Pastel\",\n    \"category\": \"SNACK\",\n    \"price\": 8.0,\n    \"description\": \"Pastel\",\n    \"image\": \"base64\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"c8634a8a-91df-4fe7-b3e9-d978c2b37384\",\n    \"name\": \"Hamburger2\",\n    \"category\": \"SNACK\",\n    \"price\": 10.0,\n    \"description\": \"Hamburger\",\n    \"image\": \"base64\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/product/c8634a8a-91df-4fe7-b3e9-d978c2b37384",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"c8634a8a-91df-4fe7-b3e9-d978c2b37384"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find by category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/findByCategory?category=SNACK",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"findByCategory"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "SNACK"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "remove",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/6956d3d9-11fc-4bf6-9330-9e37f2d291ca",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"6956d3d9-11fc-4bf6-9330-9e37f2d291ca"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
