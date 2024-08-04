@@ -2,10 +2,12 @@ package br.com.fiap.techchallenge.frameworks.configs;
 
 import br.com.fiap.techchallenge.application.gateways.OrderGateway;
 import br.com.fiap.techchallenge.application.gateways.OrderQueueGateway;
+import br.com.fiap.techchallenge.application.usecases.order.NotifyOrder;
 import br.com.fiap.techchallenge.application.usecases.order.CreateOrder;
 import br.com.fiap.techchallenge.application.usecases.order.FindOrderById;
 import br.com.fiap.techchallenge.application.usecases.order.RegisterDelivery;
 import br.com.fiap.techchallenge.application.usecases.order.UpdatePaymentStatus;
+import br.com.fiap.techchallenge.application.usecases.order.impl.NotifyOrderImpl;
 import br.com.fiap.techchallenge.application.usecases.order.impl.CreateOrderImpl;
 import br.com.fiap.techchallenge.application.usecases.order.impl.FindOrderByIdImpl;
 import br.com.fiap.techchallenge.application.usecases.order.impl.RegisterDeliveryImpl;
@@ -31,8 +33,8 @@ public class OrderBean {
     }
 
     @Bean
-    UpdatePaymentStatus updatePaymentStatus(final OrderGateway orderGateway, final RegisterDelivery registerDelivery) {
-        return new UpdatePaymentStatusImpl(orderGateway, registerDelivery);
+    UpdatePaymentStatus updatePaymentStatus(final OrderGateway orderGateway, final RegisterDelivery registerDelivery, final NotifyOrder cancelOrder) {
+        return new UpdatePaymentStatusImpl(orderGateway, registerDelivery, cancelOrder);
     }
 
     @Bean
@@ -43,6 +45,11 @@ public class OrderBean {
     @Bean
     RegisterDelivery registerDelivery(final OrderQueueGateway orderQueueGateway) {
         return new RegisterDeliveryImpl(orderQueueGateway);
+    }
+
+    @Bean
+    NotifyOrder cancelOrder(final OrderQueueGateway orderQueueGateway) {
+        return new NotifyOrderImpl(orderQueueGateway);
     }
 
     @Bean

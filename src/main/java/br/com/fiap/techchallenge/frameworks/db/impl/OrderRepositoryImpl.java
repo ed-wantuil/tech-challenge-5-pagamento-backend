@@ -1,9 +1,8 @@
 package br.com.fiap.techchallenge.frameworks.db.impl;
 
-import java.util.UUID;
-
 import br.com.fiap.techchallenge.application.gateways.OrderGateway;
 import br.com.fiap.techchallenge.domain.entities.Order;
+import br.com.fiap.techchallenge.domain.enums.PaymentStatusEnum;
 import br.com.fiap.techchallenge.frameworks.db.converters.OrderEntityToOrder;
 import br.com.fiap.techchallenge.frameworks.db.converters.OrderToOrderEntity;
 import br.com.fiap.techchallenge.frameworks.db.entities.OrderEntity;
@@ -23,10 +22,10 @@ public class OrderRepositoryImpl implements OrderGateway {
 
 
     @Override
-    public Order updatePaymentStatus(final String id, final String paymentStatus) {
+    public Order updatePaymentStatus(final String id, final PaymentStatusEnum paymentStatus) {
         var orderEntity = springDataOrderRepository.findById(id).orElseThrow();
 
-        orderEntity.setPaymentStatus(paymentStatus);
+        orderEntity.setPaymentStatus(paymentStatus.toString());
         orderEntity = springDataOrderRepository.save(orderEntity);
 
         return orderEntityToOrder.convert(orderEntity);

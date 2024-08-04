@@ -23,16 +23,17 @@ public class OrderQueueGatewayImpl implements OrderQueueGateway {
     private final OrderToOrderQueueDTO orderToOrderQueueDTO;
 
     @Value("${aws.sqs.queue.pedido.endpoint}")
-    private final String endpoint;
+    private final String endpointPedido;
+
+    @Value("${aws.sqs.queue.cancelamento.endpoint}")
+    private final String endpointCancelamento;
 
     @Override
     public void registerDelivery(final Order order) {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
-
         final OrderQueueDTO orderQueueDTO = orderToOrderQueueDTO.convert(order);
-
 
         try {
             String jsonString = objectMapper.writeValueAsString(orderQueueDTO);
@@ -40,7 +41,30 @@ public class OrderQueueGatewayImpl implements OrderQueueGateway {
             final SqsClient sqsClient = sqsConfig.sqsClient();
 
             final SendMessageRequest sendMessageRequest = SendMessageRequest.builder()
-                    .queueUrl(endpoint)
+                    .queueUrl(endpointPedido)
+                    .messageBody(jsonString)
+                    .build();
+
+            sqsClient.sendMessage(sendMessageRequest);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void notify(Order order) {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        final OrderQueueDTO orderQueueDTO = orderToOrderQueueDTO.convert(order);
+
+        try {
+            String jsonString = objectMapper.writeValueAsString(orderQueueDTO);
+
+            final SqsClient sqsClient = sqsConfig.sqsClient();
+
+            final SendMessageRequest sendMessageRequest = SendMessageRequest.builder()
+                    .queueUrl(endpointCancelamento)
                     .messageBody(jsonString)
                     .build();
 

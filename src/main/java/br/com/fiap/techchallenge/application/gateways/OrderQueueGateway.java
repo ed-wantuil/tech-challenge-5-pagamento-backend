@@ -5,4 +5,6 @@ import br.com.fiap.techchallenge.domain.entities.Order;
 public interface OrderQueueGateway {
 
     void registerDelivery(Order order);
+
+    void notify(Order order);
 }

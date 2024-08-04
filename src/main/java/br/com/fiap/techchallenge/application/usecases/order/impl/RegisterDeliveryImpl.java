@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RegisterDeliveryImpl implements RegisterDelivery {
 
-    final OrderQueueGateway orderMessageGateway;
+    private final OrderQueueGateway orderMessageGateway;
 
     @Override
     public void register(final Order order) {

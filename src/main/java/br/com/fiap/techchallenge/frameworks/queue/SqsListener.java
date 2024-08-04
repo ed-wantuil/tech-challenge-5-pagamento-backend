@@ -7,7 +7,6 @@ import br.com.fiap.techchallenge.frameworks.queue.dtos.OrderQueueDTO;
 import br.com.fiap.techchallenge.frameworks.util.JsonConverter;
 import jakarta.jms.TextMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
@@ -23,14 +22,17 @@ public class SqsListener {
 
     private final CreateOrder createOrder;
 
-    @SneakyThrows
     @JmsListener(destination = "${aws.sqs.queue.pagamento.name}")
     public void receiveMessage(final TextMessage textMessage) {
-        log.info("receiveMessge MESSAGE: {}", textMessage.getText());
+        try {
+            log.info("receiveMessge MESSAGE: {}", textMessage.getText());
 
-        final OrderQueueDTO orderQueueDTO = (OrderQueueDTO) jsonConverter.jsonToObject(textMessage.getText(), OrderQueueDTO.class);
-        final Order order = orderQueueDTOToOrder.convert(orderQueueDTO);
+            final OrderQueueDTO orderQueueDTO = (OrderQueueDTO) jsonConverter.jsonToObject(textMessage.getText(), OrderQueueDTO.class);
+            final Order order = orderQueueDTOToOrder.convert(orderQueueDTO);
 
-        createOrder.create(order);
+            createOrder.create(order);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 }

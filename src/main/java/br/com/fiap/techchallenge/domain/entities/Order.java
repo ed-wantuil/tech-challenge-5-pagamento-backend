@@ -23,4 +23,5 @@ public class Order {
     private PaymentStatus paymentStatus;
     private LocalDate created;
     private OrderAmount amount;
+    private String deliveryStatus;
 }

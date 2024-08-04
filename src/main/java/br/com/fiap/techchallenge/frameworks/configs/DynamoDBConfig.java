@@ -29,12 +29,9 @@ public class DynamoDBConfig {
     @Value("${aws.secretKey}")
     private final String secretKey;
 
-    @Value("${aws.sessionToken}")
-    private final String sessionToken;
-
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
-        final BasicSessionCredentials sessionCredentials = new BasicSessionCredentials(accessKey, secretKey, sessionToken);
+        final BasicAWSCredentials sessionCredentials = new BasicAWSCredentials(accessKey, secretKey);
 
         return AmazonDynamoDBClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(sessionCredentials))

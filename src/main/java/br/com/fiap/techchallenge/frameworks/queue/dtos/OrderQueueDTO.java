@@ -8,5 +8,7 @@ import lombok.Builder;
 public record OrderQueueDTO(String orderId,
                             String customerId,
                             LocalDate created,
-                            Double amount) {
+                            Double amount,
+                            String paymentStatus,
+                            String deliveryStatus) {
 }
