@@ -1,4 +1,4 @@
-# Tech Challenge - 5 - pedido
+# Tech Challenge - 5 - pagamento
 
 ## Introdução
 Este repositório contém o microserviço de pedidos, oferecendo as seguintes funcionalidades:
